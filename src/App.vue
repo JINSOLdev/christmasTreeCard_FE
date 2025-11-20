@@ -2,7 +2,7 @@
 
 <template>
   <div class="min-h-screen flex flex-col">
-    <header class="pt-16 pb-3 text-center">
+    <header class="pt-8 md:pt-14 lg:pt-20 pb-3 text-center">
       <h1
         class="text-2xl md:text-3xl font-bold text-slate-800 flex items-center justify-center gap-2"
       >
@@ -28,7 +28,7 @@
       </nav>
     </header>
 
-    <main class="flex-1 p-4 flex justify-center">
+    <main class="flex-1 p-4 md:p-5 flex justify-center">
       <RouterView />
     </main>
   </div>
