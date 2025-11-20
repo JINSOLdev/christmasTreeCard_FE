@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export type OrnamentType = 'GIFT' | 'RIBBON' | 'BELL' | 'SNOW' | 'HEART'
+export type OrnamentType = 'GIFT' | 'RIBBON' | 'BELL' | 'SNOW' | 'HEART' | 'DOLL'
 
 export interface Card {
   id: number
@@ -15,7 +15,7 @@ interface CardsState {
   isLoading: boolean
 }
 
-const ORNAMENT_TYPES: OrnamentType[] = ['GIFT', 'RIBBON', 'BELL', 'SNOW']
+const ORNAMENT_TYPES: OrnamentType[] = ['GIFT', 'RIBBON', 'BELL', 'SNOW', 'HEART', 'DOLL']
 
 export const useCardsStore = defineStore('cards', {
   state: (): CardsState => ({
@@ -34,7 +34,7 @@ export const useCardsStore = defineStore('cards', {
             toName: 'Santa',
             fromName: 'Emma',
             message: 'Merry Christmas! 🎄',
-            ornamentType: 'BELL',
+            ornamentType: 'DOLL',
           },
         ]
       } finally {
