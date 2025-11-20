@@ -6,7 +6,7 @@
 
     <section class="actions-section">
       <button
-        class="mt-6 px-5 py-2 rounded-xl bg-white/80 text-slate-700 border border-slate-200 shadow-sm hover:bg-white hover:-translate-y-0.5 transition transform"
+        class="mt-3 px-5 py-2 rounded-xl bg-white/80 text-slate-700 border border-slate-200 shadow-sm hover:bg-white hover:-translate-y-0.5 transition transform"
         @click="openCreateModal"
       >
         카드 작성

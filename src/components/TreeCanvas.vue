@@ -77,7 +77,7 @@ function onClickOrnament(card: Card) {
 }
 
 .tree-image {
-  width: 70%;
+  width: 100%;
   pointer-events: none;
   user-select: none;
 }
