@@ -5,9 +5,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { Card } from '@/stores/cards'
-import type { OrnamentType } from '@/stores/cards'
+import { computed, type CSSProperties } from 'vue'
+import type { Card, OrnamentType } from '@/stores/cards'
 
 const props = defineProps<{
   x: number
@@ -15,23 +14,28 @@ const props = defineProps<{
   card: Card
 }>()
 
-// ornamentType -> 이모지 매핑
+const emit = defineEmits<{
+  (e: 'click'): void
+}>()
+
+// 🎀 BE enum(대문자) 기준으로 매핑
 const emojiByType: Record<OrnamentType, string> = {
   GIFT: '🎁',
   RIBBON: '🎀',
   BELL: '🔔',
   SNOW: '❄️',
   HEART: '♥️',
-  DOLL: '🧸'
+  DOLL: '🧸',
 }
 
+// ornamentType이 null/undefined일 수도 있으니 기본값 GIFT로
 const emoji = computed(() => {
-  // 혹시 ornamentType이 없으면 기본값 🎁
-  return emojiByType[props.card.ornamentType] ?? '🎁'
+  const type: OrnamentType = props.card.ornamentType ?? 'GIFT'
+  return emojiByType[type] ?? '🎁'
 })
 
-// 위치는 그대로 % 기준
-const styleObject = computed(() => ({
+// ✅ style을 CSSProperties로 명시해서 TS 에러 제거
+const styleObject = computed<CSSProperties>(() => ({
   position: 'absolute',
   left: `${props.x}%`,
   top: `${props.y}%`,
