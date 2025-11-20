@@ -1,3 +1,4 @@
+<!-- src/views/CardsView.vue -->
 <template>
   <div class="w-full flex flex-col items-center pb-10">
     <section class="w-full max-w-5xl px-4 mt-4">
@@ -39,7 +40,7 @@
 
           <div class="flex items-center gap-1 text-xs">
             <button
-              v-for="type in ['all', 'gift', 'ribbon', 'bell', 'snow', 'heart', 'doll']"
+              v-for="type in filterOptions"
               :key="type"
               type="button"
               class="rounded-full px-2.5 py-1 border text-[11px] transition"
@@ -48,10 +49,9 @@
                   ? 'bg-emerald-500 text-white border-emerald-500'
                   : 'bg-white/80 text-slate-600 border-slate-200 hover:bg-white'
               "
-              @click="ornamentFilter = type as any"
+              @click="ornamentFilter = type"
             >
-              <span v-if="type === 'all'">전체</span>
-              <span v-else>{{ ornamentEmojiMap[type] || '❓' }}</span>
+              <span>{{ getFilterEmoji(type) }}</span>
             </button>
           </div>
         </div>
@@ -133,18 +133,34 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { useCardsStore, type Card } from '@/stores/cards'
+import { useCardsStore, type Card, type OrnamentType } from '@/stores/cards'
 import CardModal from '@/components/CardModal.vue'
 
 const cardsStore = useCardsStore()
 
 const search = ref('')
 const sortMode = ref<'latest' | 'oldest'>('latest')
-const ornamentFilter = ref<'all' | 'gift' | 'ribbon' | 'bell' | 'snow' | 'heart' | 'doll'>('all')
+
+// 카드 모아보기에서 쓰는 필터 타입 (소문자)
+const filterOptions = ['all', 'gift', 'ribbon', 'bell', 'snow', 'heart', 'doll'] as const
+type OrnamentFilter = (typeof filterOptions)[number]
+
+const ornamentFilter = ref<OrnamentFilter>('all')
 
 const selectedCard = ref<Card | null>(null)
 
-const ornamentEmojiMap: Record<string, string> = {
+// 실제 카드의 ornamentType(enum, 대문자) -> 이모지
+const ornamentEmojiByType: Record<OrnamentType, string> = {
+  GIFT: '🎁',
+  RIBBON: '🎀',
+  BELL: '🔔',
+  SNOW: '❄️',
+  HEART: '♥️',
+  DOLL: '🧸',
+}
+
+// 필터 버튼(소문자) -> 이모지
+const filterEmojiMap: Partial<Record<OrnamentFilter, string>> = {
   gift: '🎁',
   ribbon: '🎀',
   bell: '🔔',
@@ -153,16 +169,26 @@ const ornamentEmojiMap: Record<string, string> = {
   doll: '🧸',
 }
 
-function getEmojiFromType(type?: string | null): string {
-  if (!type) return ornamentEmojiMap.gift
+// 필터 버튼(소문자) -> 실제 enum 값(대문자)
+const filterToTypeMap: Partial<Record<OrnamentFilter, OrnamentType>> = {
+  gift: 'GIFT',
+  ribbon: 'RIBBON',
+  bell: 'BELL',
+  snow: 'SNOW',
+  heart: 'HEART',
+  doll: 'DOLL',
+}
 
-  const lower = type.toLowerCase()
+// 카드에서 사용할 이모지
+function getEmojiFromType(type?: OrnamentType | null): string {
+  if (!type) return ornamentEmojiByType.GIFT
+  return ornamentEmojiByType[type] ?? ornamentEmojiByType.GIFT
+}
 
-  if (ornamentEmojiMap[lower]) {
-    return ornamentEmojiMap[lower]
-  }
-
-  return type
+// 필터 버튼에 표시할 이모지
+function getFilterEmoji(type: OrnamentFilter): string {
+  if (type === 'all') return '전체'
+  return filterEmojiMap[type] ?? '❓'
 }
 
 // 카드 숫자
@@ -172,7 +198,7 @@ const totalCount = computed(() => cardsStore.cards.length)
 const filteredCards = computed(() => {
   let list = [...cardsStore.cards]
 
-  // 1) 검색 (toName, fromName, message에 포함)
+  // 1. 검색 (toName, fromName, message에 포함)
   const q = search.value.trim().toLowerCase()
   if (q) {
     list = list.filter((card) => {
@@ -181,20 +207,15 @@ const filteredCards = computed(() => {
     })
   }
 
-  // 2) 오너먼트 타입 필터 (ornamentType이 있다고 가정)
+  // 2. 오너먼트 타입 필터
   if (ornamentFilter.value !== 'all') {
-    list = list.filter((card) => {
-      const type = card.ornamentType
-      if (!type) return false
-
-      if (type === ornamentFilter.value) return true
-
-      const emoji = getEmojiFromType(type)
-      return emoji === ornamentEmojiMap[ornamentFilter.value]
-    })
+    const targetType = filterToTypeMap[ornamentFilter.value]
+    if (targetType) {
+      list = list.filter((card) => card.ornamentType === targetType)
+    }
   }
 
-  // 3) 정렬 (createdAt이 있다고 가정, 없으면 id 기준으로 fallback)
+  // 3. 정렬
   list.sort((a, b) => {
     const aKey = (a.createdAt ?? a.id) as any
     const bKey = (b.createdAt ?? b.id) as any
@@ -207,7 +228,7 @@ const filteredCards = computed(() => {
   return list
 })
 
-// 카드 클릭 → 상세 모달
+// 카드 클릭 > 상세 모달
 function openCardDetail(card: Card) {
   selectedCard.value = card
 }
@@ -217,7 +238,6 @@ function closeCardDetail() {
 }
 
 onMounted(() => {
-  // 트리 화면에서 이미 불러왔다면 그대로 재사용
   if (!cardsStore.cards.length) {
     cardsStore.fetchCards()
   }

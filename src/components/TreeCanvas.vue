@@ -27,11 +27,11 @@
 </template>
 
 <script setup lang="ts">
-import OrnamentItem from '@/components/OrnamentItem.vue'
+import OrnamentItem from './OrnamentItem.vue'
 import type { Card } from '@/stores/cards'
 
-interface Ornament {
-  id: number
+type Ornament = {
+  id: string
   x: number
   y: number
   card: Card
@@ -41,12 +41,12 @@ const props = defineProps<{
   ornaments: Ornament[]
 }>()
 
-const emits = defineEmits<{
+const emit = defineEmits<{
   (e: 'select-card', card: Card): void
 }>()
 
 function onClickOrnament(card: Card) {
-  emits('select-card', card)
+  emit('select-card', card)
 }
 </script>
 
@@ -54,164 +54,59 @@ function onClickOrnament(card: Card) {
 .tree-canvas {
   display: flex;
   justify-content: center;
+  width: 100%;
 }
 
-/* 하늘 배경 */
 .sky {
   position: relative;
   width: 320px;
   height: 440px;
-  border-radius: 24px;
-  background: radial-gradient(circle at top, #fef3c7 0%, #fee2e2 35%, #bfdbfe 100%);
-  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+  border-radius: 40px;
+  background: linear-gradient(to bottom, #fee9d6, #cfe6ff);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
   overflow: hidden;
 }
 
-/* 트리 (이미지 기반) */
+/* 트리 */
 .tree-wrapper {
   position: absolute;
-  left: 50%;
-  top: 65%; 
-  transform: translate(-50%, -50%); 
-  width: 260px;
-  height: 360px;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .tree-image {
-  width: 100%;
-  height: auto;
-  display: block;
+  width: 70%;
   pointer-events: none;
+  user-select: none;
 }
 
-/* 공통 눈 스타일 */
+/* 눈 효과 등 기존 스타일 그대로 */
 .snow {
   position: absolute;
-  width: 5px;
-  height: 5px;
-  background: white;
-  border-radius: 50%;
-  opacity: 0.9;
-  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.7));
-  animation-name: snow-fall;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
+  inset: 0;
+  background-image: radial-gradient(white 1.5px, transparent 1.5px);
+  opacity: 0.8;
+  animation: snow-fall 12s linear infinite;
 }
 
-/* ---- 레이어 1~6 (눈 개수 많고 서로 겹쳐 흐름이 자연스럽게) ---- */
-
-/* 레이어 1 */
-.snow-1 {
-  top: -80px;
-  left: 0;
-  animation-duration: 8s;
-  animation-delay: 0s;
-  box-shadow:
-    10px -60px white,
-    40px -25px white,
-    70px -5px white,
-    100px -45px white,
-    130px -15px white,
-    160px -35px white,
-    190px -10px white,
-    220px -50px white,
-    250px -20px white;
-}
-
-/* 레이어 2 */
 .snow-2 {
-  top: -90px;
-  left: 15px;
-  animation-duration: 9s;
-  animation-delay: 1s;
-  box-shadow:
-    5px -40px white,
-    35px -10px white,
-    65px -55px white,
-    95px -20px white,
-    125px -70px white,
-    155px -30px white,
-    185px -5px white,
-    215px -45px white,
-    245px -15px white;
+  animation-duration: 16s;
+  opacity: 0.6;
 }
 
-/* 레이어 3 */
 .snow-3 {
-  top: -100px;
-  left: 30px;
-  animation-duration: 10s;
-  animation-delay: 2s;
-  box-shadow:
-    0px -75px white,
-    30px -35px white,
-    60px -5px white,
-    90px -50px white,
-    120px -25px white,
-    150px -65px white,
-    180px -15px white,
-    210px -40px white,
-    240px -10px white;
+  animation-duration: 20s;
+  opacity: 0.5;
 }
 
-/* 레이어 4 */
-.snow-4 {
-  top: -85px;
-  left: 5px;
-  animation-duration: 8.5s;
-  animation-delay: 0.5s;
-  box-shadow:
-    20px -55px white,
-    50px -15px white,
-    80px -40px white,
-    110px -5px white,
-    140px -60px white,
-    170px -25px white,
-    200px -70px white,
-    230px -20px white;
-}
-
-/* 레이어 5 */
-.snow-5 {
-  top: -95px;
-  left: 25px;
-  animation-duration: 9.5s;
-  animation-delay: 1.5s;
-  box-shadow:
-    15px -65px white,
-    45px -30px white,
-    75px -10px white,
-    105px -55px white,
-    135px -20px white,
-    165px -75px white,
-    195px -35px white,
-    225px -5px white;
-}
-
-/* 레이어 6 */
-.snow-6 {
-  top: -105px;
-  left: 35px;
-  animation-duration: 11s;
-  animation-delay: 3s;
-  box-shadow:
-    10px -50px white,
-    40px -80px white,
-    70px -25px white,
-    100px -60px white,
-    130px -15px white,
-    160px -45px white,
-    190px -5px white,
-    220px -70px white;
-}
-
-/* 카드 높이(340px)를 기준으로 아래까지 자연스럽게 떨어지는 거리 */
 @keyframes snow-fall {
   0% {
-    transform: translateY(-60px);
+    transform: translateY(-40px);
   }
   100% {
-    transform: translateY(420px);
+    transform: translateY(40px);
   }
 }
 </style>
