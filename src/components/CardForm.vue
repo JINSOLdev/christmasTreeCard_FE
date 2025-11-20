@@ -1,30 +1,50 @@
 <template>
-  <form class="card-form" @submit.prevent="onSubmit">
-    <label>
-      To
-      <input v-model="form.toName" required />
-    </label>
-
-    <label>
-      From
-      <input v-model="form.fromName" required />
-    </label>
-
-    <label>
-      Message
-      <textarea v-model="form.message" rows="4" required />
-    </label>
-
-    <!-- 나중에 템플릿 선택 영역 추가 가능 -->
-    <!--
-    <div class="template-list">
-      템플릿 리스트...
+  <form class="space-y-3" @submit.prevent="onSubmit">
+    <div>
+      <label class="block text-xs font-semibold text-slate-700 mb-1">To</label>
+      <input
+        v-model="form.toName"
+        required
+        class="w-full rounded-xl border border-amber-200 bg-white/80 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300"
+        placeholder="받는 사람 이름"
+      />
     </div>
-    -->
 
-    <div class="actions">
-      <button type="button" @click="$emit('cancel')">취소</button>
-      <button type="submit">등록하기</button>
+    <div>
+      <label class="block text-xs font-semibold text-slate-700 mb-1">From</label>
+      <input
+        v-model="form.fromName"
+        required
+        class="w-full rounded-xl border border-amber-200 bg-white/80 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300"
+        placeholder="보내는 사람 이름"
+      />
+    </div>
+
+    <div>
+      <label class="block text-xs font-semibold text-slate-700 mb-1">Message</label>
+      <textarea
+        v-model="form.message"
+        required
+        rows="4"
+        class="w-full rounded-xl border border-amber-200 bg-white/80 px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-amber-300"
+        placeholder="따뜻한 크리스마스 메시지를 적어주세요 ✨"
+      />
+    </div>
+
+    <div class="flex justify-end gap-2 pt-1">
+      <button
+        type="button"
+        @click="$emit('cancel')"
+        class="px-3 py-1.5 rounded-xl text-xs bg-white/80 text-slate-600 border border-slate-200 hover:bg-white"
+      >
+        취소
+      </button>
+      <button
+        type="submit"
+        class="px-3 py-1.5 rounded-xl text-xs bg-emerald-500 text-white hover:bg-emerald-600 shadow-sm"
+      >
+        등록하기
+      </button>
     </div>
   </form>
 </template>
@@ -45,25 +65,8 @@ const form = reactive({
 
 function onSubmit() {
   emits('submit', { ...form })
-
-  // 필요하면 여기서 초기화
   form.toName = ''
   form.fromName = ''
   form.message = ''
 }
 </script>
-
-<style scoped>
-.card-form {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.actions {
-  margin-top: 12px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-}
-</style>
