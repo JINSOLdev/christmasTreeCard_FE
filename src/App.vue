@@ -2,15 +2,15 @@
 
 <template>
   <div class="min-h-screen flex flex-col">
-    <header class="pt-4 pb-3 text-center">
+    <header class="pt-8 md:pt-14 lg:pt-20 pb-3 text-center">
       <h1
-        class="text-2xl md:text-3xl font-semibold text-slate-800 flex items-center justify-center gap-2"
+        class="text-2xl md:text-3xl font-bold text-slate-800 flex items-center justify-center gap-2"
       >
-        <span>🎄</span>
+        <span></span>
         <span>Merry Christmas</span>
-        <span>🧸</span>
+        <span>🧸🎁</span>
       </h1>
-      <p class="mt-1 text-sm text-slate-600">따뜻한 메시지로 트리를 함께 채워주세요.</p>
+      <p class="mt-1 text-m text-slate-600">따뜻한 메시지로 트리를 함께 채워주세요.</p>
 
       <nav class="mt-3 flex gap-4 justify-center text-sm">
         <RouterLink
@@ -28,7 +28,7 @@
       </nav>
     </header>
 
-    <main class="flex-1 p-4 flex justify-center">
+    <main class="flex-1 p-4 md:p-5 flex justify-center">
       <RouterView />
     </main>
   </div>

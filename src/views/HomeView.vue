@@ -6,7 +6,7 @@
 
     <section class="actions-section">
       <button
-        class="mt-6 px-5 py-2 rounded-xl bg-white/80 text-slate-700 border border-slate-200 shadow-sm hover:bg-white hover:-translate-y-0.5 transition transform"
+        class="mt-3 px-5 py-2 rounded-xl bg-white/80 text-slate-700 border border-slate-200 shadow-sm hover:bg-white hover:-translate-y-0.5 transition transform"
         @click="openCreateModal"
       >
         카드 작성
@@ -46,32 +46,39 @@ const selectedCard = ref<Card | null>(null)
 const ornamentPositions = ref<Record<string, Pos>>({})
 
 const TREE_BOUNDS = {
-  minY: 10,
-  maxY: 62,
+  minY: 30,
+  maxY: 68,
 }
 
-const MIN_DISTANCE = 8
+const MIN_DISTANCE = 8.3
 
 function getTreeBoundsForY(y: number) {
-  if (y < 24) {
-    return { minX: 46, maxX: 54 }
-  }
-  if (y < 36) {
-    return { minX: 40, maxX: 60 }
-  }
-  if (y < 50) {
-    return { minX: 34, maxX: 66 }
-  }
-  if (y < 72) {
-    return { minX: 28, maxX: 72 }
-  }
-  return { minX: 44, maxX: 56 }
+  // 트리 삼각형의 대략적인 세로 범위
+  const topY = 30
+  const bottomY = 68
+
+  // y를 0~1 사이 비율로 변환 (위 0, 아래 1)
+  const t = Math.min(Math.max((y - topY) / (bottomY - topY), 0), 1)
+
+  // 위쪽에서는 폭이 아주 좁고, 아래로 갈수록 넓어지게
+  const minHalfWidth = 4 // 꼭대기 근처 반쪽 폭
+  const maxHalfWidth = 24 // 아래쪽 반쪽 폭 (전체 폭 약 48)
+
+  const halfWidth = minHalfWidth + t * (maxHalfWidth - minHalfWidth)
+
+  const centerX = 50 // 트리 중앙
+  const minX = centerX - halfWidth
+  const maxX = centerX + halfWidth
+
+  return { minX, maxX }
 }
 
 function randomPosition(): Pos {
   const y = TREE_BOUNDS.minY + Math.random() * (TREE_BOUNDS.maxY - TREE_BOUNDS.minY)
+
   const { minX, maxX } = getTreeBoundsForY(y)
   const x = minX + Math.random() * (maxX - minX)
+
   return { x, y }
 }
 
