@@ -59,8 +59,8 @@ function onClickOrnament(card: Card) {
 /* 하늘 배경 */
 .sky {
   position: relative;
-  width: 260px;
-  height: 340px;
+  width: 320px;
+  height: 440px;
   border-radius: 24px;
   background: radial-gradient(circle at top, #fef3c7 0%, #fee2e2 35%, #bfdbfe 100%);
   box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
@@ -70,11 +70,11 @@ function onClickOrnament(card: Card) {
 /* 트리 (이미지 기반) */
 .tree-wrapper {
   position: absolute;
-  bottom: 8px;
   left: 50%;
-  transform: translateX(-50%);
-  width: 190px;
-  height: 260px;
+  top: 65%; 
+  transform: translate(-50%, -50%); 
+  width: 260px;
+  height: 360px;
 }
 
 .tree-image {

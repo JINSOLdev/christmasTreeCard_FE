@@ -22,6 +22,7 @@ const emojiByType: Record<OrnamentType, string> = {
   BELL: '🔔',
   SNOW: '❄️',
   HEART: '♥️',
+  DOLL: '🧸'
 }
 
 const emoji = computed(() => {
@@ -40,8 +41,8 @@ const styleObject = computed(() => ({
 
 <style scoped>
 .ornament {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 999px;
   border: none;
   cursor: pointer;
