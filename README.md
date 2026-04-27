@@ -42,15 +42,14 @@
 
 ## 기술 스택
 
-### Backend (현재 레포)
-- **NestJS**
-- **TypeScript**
-- **Prisma ORM**
-- **PostgreSQL** 
+### Backend 
+- NestJS
+- TypeScript
+- Prisma ORM
+- PostgreSQL
 
 ### Frontend
-- Vue.js  
-  → 배포: **Vercel**
+- Vue3
 
 ---
 
