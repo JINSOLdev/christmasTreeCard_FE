@@ -50,6 +50,9 @@
 
 ### Frontend
 - Vue3
+- Vite
+- Pinia
+- Tailwind CSS
 
 ---
 
